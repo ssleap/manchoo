@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '1000 chewing project',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -109,12 +109,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _newMouthful() {
-    setState(() {
-      _currentMouthfulChews = 0;
-    });
-  }
-
   void _mouthfulDone() {
     if (_currentMouthfulChews > 0) {
       setState(() {
@@ -149,133 +143,147 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Chew Counter'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 16),
-            Text(
-              'Session Time: ${_formatDuration(_elapsedSeconds)}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      '$_currentMouthfulChews',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    const Text('Current Mouthful'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      '$_totalChews',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    const Text('Total Chews'),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _isSessionRunning ? _newMouthful : null,
-                  child: const Text('New Mouthful'),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _isSessionRunning && _currentMouthfulChews > 0 ? _mouthfulDone : null,
-                  child: const Text('Mouthful Done'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _toggleSession,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
-              child: Text(_isSessionRunning ? 'Stop Session' : 'Start Session'),
-            ),
-            const SizedBox(height: 24),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Mouthfuls This Session',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: _mouthfuls.isEmpty
-                  ? const Center(child: Text('No mouthfuls yet.'))
-                  : ListView.builder(
-                      itemCount: _mouthfuls.length,
-                      itemBuilder: (context, index) {
-                        final mouthful = _mouthfuls[index];
-                        return ListTile(
-                          leading: const Icon(Icons.fastfood),
-                          title: Text('Chews: ${mouthful['chews']}'),
-                          subtitle: Text('Time: '
-                              '${mouthful['time'].hour.toString().padLeft(2, '0')}:${mouthful['time'].minute.toString().padLeft(2, '0')}'),
-                        );
-                      },
-                    ),
-            ),
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Session History',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 100,
-              child: _sessionHistory.isEmpty
-                  ? const Center(child: Text('No sessions yet.'))
-                  : ListView.builder(
-                      itemCount: _sessionHistory.length,
-                      itemBuilder: (context, index) {
-                        final session = _sessionHistory[index];
-                        return ListTile(
-                          leading: const Icon(Icons.history),
-                          title: Text('Total Chews: ${session['totalChews']}'),
-                          subtitle: Text('Duration: ${_formatDuration(session['duration'])}\nMouthfuls: ${session['mouthfuls'].length}'),
-                          trailing: Text(
-                            '${session['date'].hour.toString().padLeft(2, '0')}:${session['date'].minute.toString().padLeft(2, '0')}\n${session['date'].month}/${session['date'].day}',
-                            textAlign: TextAlign.right,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Chew Counter'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Chew Session', icon: Icon(Icons.fastfood)),
+              Tab(text: 'Session History', icon: Icon(Icons.history)),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // Chew Session Tab
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(height: 16),
+                  Text(
+                    'Session Time: ${_formatDuration(_elapsedSeconds)}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            '$_currentMouthfulChews',
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
-                        );
-                      },
+                          const Text('Current Mouthful'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '$_totalChews',
+                            style: Theme.of(context).textTheme.displayLarge,
+                          ),
+                          const Text('Total Chews'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _isSessionRunning && _currentMouthfulChews > 0 ? _mouthfulDone : null,
+                        child: const Text('Mouthful Done'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: _toggleSession,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      textStyle: const TextStyle(fontSize: 18),
                     ),
+                    child: Text(_isSessionRunning ? 'Stop Session' : 'Start Session'),
+                  ),
+                  const SizedBox(height: 24),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Mouthfuls This Session',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: _mouthfuls.isEmpty
+                        ? const Center(child: Text('No mouthfuls yet.'))
+                        : ListView.builder(
+                            itemCount: _mouthfuls.length,
+                            itemBuilder: (context, index) {
+                              final mouthful = _mouthfuls[index];
+                              return ListTile(
+                                leading: const Icon(Icons.fastfood),
+                                title: Text('Chews: ${mouthful['chews']}'),
+                                subtitle: Text('Time: '
+                                    '${mouthful['time'].hour.toString().padLeft(2, '0')}:${mouthful['time'].minute.toString().padLeft(2, '0')}'),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            ),
+            // Session History Tab
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  Text(
+                    'Session History',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: _sessionHistory.isEmpty
+                        ? const Center(child: Text('No sessions yet.'))
+                        : ListView.builder(
+                            itemCount: _sessionHistory.length,
+                            itemBuilder: (context, index) {
+                              final session = _sessionHistory[index];
+                              return ListTile(
+                                leading: const Icon(Icons.history),
+                                title: Text('Total Chews: ${session['totalChews']}'),
+                                subtitle: Text('Duration: ${_formatDuration(session['duration'])}\nMouthfuls: ${session['mouthfuls'].length}'),
+                                trailing: Text(
+                                  '${session['date'].hour.toString().padLeft(2, '0')}:${session['date'].minute.toString().padLeft(2, '0')}\n${session['date'].month}/${session['date'].day}',
+                                  textAlign: TextAlign.right,
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
+        floatingActionButton: _isSessionRunning
+            ? FloatingActionButton(
+                onPressed: _incrementChew,
+                tooltip: 'Increment Chew',
+                child: const Icon(Icons.add),
+              )
+            : null,
       ),
-      floatingActionButton: _isSessionRunning
-          ? FloatingActionButton(
-              onPressed: _incrementChew,
-              tooltip: 'Increment Chew',
-              child: const Icon(Icons.add),
-            )
-          : null,
     );
   }
 }
